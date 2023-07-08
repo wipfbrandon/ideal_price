@@ -123,10 +123,13 @@ maxRents = st.sidebar.number_input('Maximum Rent / Unit',min_value=1, value=750)
 squareFeet = st.sidebar.number_input('Square Feet (Total)',min_value=1, value=1000)
 taxes = st.sidebar.number_input('Taxes',min_value=1, value=500)
 insurance = st.sidebar.number_input('Insurance',min_value=1, value=500)
-
+incomeTH = st.sidebar.number_input('Net Income Threshold ($)',min_value=1, value=2000)
+npmTH = st.sidebar.number_input('Net Profit Margin Threshold (%)',min_value=1, value=5)
+onePctTH = st.sidebar.number_input('One Pct Test Threshold (%)',min_value=1, value=1)
+cocroiTH = st.sidebar.number_input('CoCROI Threshold (%)',min_value=1, value=5)
 
 #%% CALCULATE
-df_price = ideal_price(listPrice=listPrice, units=units, estRentUnit=maxRents, squareFeet=squareFeet, tax=taxes, ins=insurance, ni_th=2000, npm_th=5, pct_th=1, coc_th=5)
+df_price = ideal_price(listPrice=listPrice, units=units, estRentUnit=maxRents, squareFeet=squareFeet, tax=taxes, ins=insurance, ni_th=incomeTH, npm_th=npmTH, pct_th=onePctTH, coc_th=cocroiTH)
 df_ideal_price = df_price[(df_price.TH_Total == df_price.TH_Total.max())]
 df_second_price = df_price[(df_price.TH_Total == (df_price.TH_Total.max() - 1))].head(1)
 
@@ -137,7 +140,7 @@ price_final = df_ideal_price[['Price','IdealOffer','Diff','DiffPct','Rent','Down
 
 price_final = price_final.rename(index={0:'IDEAL'})
 
-df_rent = ideal_rent(listPrice=listPrice, units=units, estRentUnit=maxRents, squareFeet=squareFeet, tax=taxes, ins=insurance, ni_th=2000, npm_th=5, pct_th=1, coc_th=5)
+df_rent = ideal_rent(listPrice=listPrice, units=units, estRentUnit=maxRents, squareFeet=squareFeet, tax=taxes, ins=insurance, ni_th=incomeTH, npm_th=npmTH, pct_th=onePctTH, coc_th=cocroiTH)
 
 df_first_rent = df_rent[(df_rent.TH_Total == df_rent.TH_Total.max())].head(1)
 df_second_rent = df_rent[(df_rent.TH_Total == (df_rent.TH_Total.max() - 1))].head(1)
@@ -171,3 +174,12 @@ Ideal Rents
 '''
 st.dataframe(rent_final)
 st.caption('_(F) denotes threshold was NOT met._')
+
+"""
+---
+THRESHOLDS (FLOORS) SET FOR THIS SCENARIO:
+"""
+st.caption(f'Net Income: ${incomeTH}')
+st.caption(f'Net Profit Margin: {npmTH}%')
+st.caption(f'One Percent Test: {onePctTH}%')
+st.caption(f'CoC ROI: {cocroiTH}%')
