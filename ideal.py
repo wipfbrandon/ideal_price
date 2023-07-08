@@ -117,26 +117,27 @@ def ideal_rent(listPrice=1, units=1, estRentUnit=1, squareFeet=1, tax=1, ins=1, 
 
 
 #%% STREAMLIT OUTPUT
-listPrice = st.sidebar.number_input('Purchase Price',min_value=1)
-units = st.sidebar.number_input('Number of Units',min_value=1)
-maxRents = st.sidebar.number_input('Maximum Rent / Unit',min_value=1)
-squareFeet = st.sidebar.number_input('Square Feet (Total)',min_value=1)
-taxes = st.sidebar.number_input('Taxes',min_value=1)
+listPrice = st.sidebar.number_input('Purchase Price',min_value=1, value=200000)
+units = st.sidebar.number_input('Number of Units',min_value=1, value=2)
+maxRents = st.sidebar.number_input('Maximum Rent / Unit',min_value=1, value=750)
+squareFeet = st.sidebar.number_input('Square Feet (Total)',min_value=1, value=1000)
+taxes = st.sidebar.number_input('Taxes',min_value=1, value=500)
+insurance = st.sidebar.number_input('Insurance',min_value=1, value=500)
 
 
 #%% CALCULATE
-df_price = ideal_price(listPrice=listPrice, units=units, estRentUnit=maxRents, squareFeet=squareFeet, tax=taxes, ni_th=2000, npm_th=5, pct_th=1, coc_th=5)
+df_price = ideal_price(listPrice=listPrice, units=units, estRentUnit=maxRents, squareFeet=squareFeet, tax=taxes, ins=insurance, ni_th=2000, npm_th=5, pct_th=1, coc_th=5)
 df_ideal_price = df_price[(df_price.TH_Total == df_price.TH_Total.max())]
 df_second_price = df_price[(df_price.TH_Total == (df_price.TH_Total.max() - 1))].head(1)
 
 price_final = df_ideal_price[['Price','IdealOffer','Diff','DiffPct','Rent','DownPay','CashToClose',
           'OfferSqFt','RentSqtFt','GAR','FixedExp','VarExp','TotalExp','NetInc',
           'NPM','OnePctTest','CoCROI','TH_Total'
-          ]].head(1)
+          ]].head(1).reset_index()
 
 price_final = price_final.rename(index={0:'IDEAL'})
 
-df_rent = ideal_rent(listPrice=listPrice, units=units, estRentUnit=maxRents, squareFeet=squareFeet, tax=taxes, ni_th=2000, npm_th=5, pct_th=1, coc_th=5)
+df_rent = ideal_rent(listPrice=listPrice, units=units, estRentUnit=maxRents, squareFeet=squareFeet, tax=taxes, ins=insurance, ni_th=2000, npm_th=5, pct_th=1, coc_th=5)
 
 df_first_rent = df_rent[(df_rent.TH_Total == df_rent.TH_Total.max())].head(1)
 df_second_rent = df_rent[(df_rent.TH_Total == (df_rent.TH_Total.max() - 1))].head(1)
@@ -145,7 +146,7 @@ df_ideal_rent = pd.concat([df_first_rent, df_second_rent], axis=0, ignore_index=
 
 rent_final = df_ideal_rent[['Price','IdealRent','Diff','DownPay','CashToClose',
          'OfferSqFt','RentSqtFt','GAR','FixedExp','VarExp','TotalExp','NetInc',
-         'NPM','OnePctTest','CoCROI','TH_Total']]
+         'NPM','OnePctTest','CoCROI','TH_Total']].reset_index()
 
 rent_final = rent_final.rename(index={0:'IDEAL', 1:'MAYBE'})
 
