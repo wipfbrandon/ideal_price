@@ -133,7 +133,7 @@ df_second_price = df_price[(df_price.TH_Total == (df_price.TH_Total.max() - 1))]
 price_final = df_ideal_price[['Price','IdealOffer','Diff','DiffPct','Rent','DownPay','CashToClose',
           'OfferSqFt','RentSqtFt','GAR','FixedExp','VarExp','TotalExp','NetInc',
           'NPM','OnePctTest','CoCROI','TH_Total'
-          ]].head(1).reset_index()
+          ]].head(1).reset_index(drop=True)
 
 price_final = price_final.rename(index={0:'IDEAL'})
 
@@ -146,7 +146,7 @@ df_ideal_rent = pd.concat([df_first_rent, df_second_rent], axis=0, ignore_index=
 
 rent_final = df_ideal_rent[['Price','IdealRent','Diff','DownPay','CashToClose',
          'OfferSqFt','RentSqtFt','GAR','FixedExp','VarExp','TotalExp','NetInc',
-         'NPM','OnePctTest','CoCROI','TH_Total']].reset_index()
+         'NPM','OnePctTest','CoCROI','TH_Total']].reset_index(drop=True)
 
 rent_final = rent_final.rename(index={0:'IDEAL', 1:'MAYBE'})
 
