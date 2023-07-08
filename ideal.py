@@ -117,16 +117,16 @@ def ideal_rent(listPrice=1, units=1, estRentUnit=1, squareFeet=1, tax=1, ins=1, 
 
 
 #%% STREAMLIT OUTPUT
-listPrice = st.sidebar.number_input('Purchase Price',min_value=1, value=200000)
-units = st.sidebar.number_input('Number of Units',min_value=1, value=2)
-maxRents = st.sidebar.number_input('Maximum Rent / Unit',min_value=1, value=750)
-squareFeet = st.sidebar.number_input('Square Feet (Total)',min_value=1, value=1000)
-taxes = st.sidebar.number_input('Taxes',min_value=1, value=500)
-insurance = st.sidebar.number_input('Insurance',min_value=1, value=500)
-incomeTH = st.sidebar.number_input('Net Income Threshold ($)',min_value=1, value=2000)
-npmTH = st.sidebar.number_input('Net Profit Margin Threshold (%)',min_value=1, value=5)
-onePctTH = st.sidebar.number_input('One Pct Test Threshold (%)',min_value=1, value=1)
-cocroiTH = st.sidebar.number_input('CoCROI Threshold (%)',min_value=1, value=5)
+listPrice = st.sidebar.number_input('Purchase Price',min_value=1, value=200000, step=10000, help='Enter what you would pay, not the List Price')
+units = st.sidebar.number_input('Number of Units',min_value=1, value=2, step=1)
+maxRents = st.sidebar.number_input('Maximum Rent / Unit',min_value=1, value=750, step=50, help='If Units differ, enter Average')
+squareFeet = st.sidebar.number_input('Square Feet (Total)',min_value=1, value=1000, step=100, help='Total Square Footage of Property')
+taxes = st.sidebar.number_input('Taxes',min_value=1, value=500, step=100)
+insurance = st.sidebar.number_input('Insurance',min_value=1, value=500, step=500, help='Best Guess')
+incomeTH = st.sidebar.number_input('Net Income Threshold ($)',min_value=1, value=2000, step=500, help='Gross Annual Rents - Total Expenses')
+npmTH = st.sidebar.number_input('Net Profit Margin Threshold (%)', min_value=1.00, value=5.00, step=0.1, help='Net Income / Gross Annual Rents')
+onePctTH = st.sidebar.number_input('One Pct Test Threshold (%)',min_value=1.00, value=1.00, step=0.01, help='Annual Rents / Price')
+cocroiTH = st.sidebar.number_input('CoCROI Threshold (%)',min_value=1.00, value=5.00, step=0.1, help='Net Income / Cash In')
 
 #%% CALCULATE
 df_price = ideal_price(listPrice=listPrice, units=units, estRentUnit=maxRents, squareFeet=squareFeet, tax=taxes, ins=insurance, ni_th=incomeTH, npm_th=npmTH, pct_th=onePctTH, coc_th=cocroiTH)
