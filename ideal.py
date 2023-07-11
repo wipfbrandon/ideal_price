@@ -197,7 +197,7 @@ else:
 ---
 THRESHOLDS (FLOORS) SET FOR THIS SCENARIO:
 """
-st.caption(f'Net Income: ${'${:,.0f}'.format(incomeTH)}')
+st.caption('Net Income: ' '${:,.0f}'.format(incomeTH)')
 st.caption(f'Net Profit Margin: {round(npmTH, 2)}%')
 st.caption(f'One Percent Test: {round(onePctTH, 2)}%')
 st.caption(f'CoC ROI: {round(cocroiTH, 2)}%')
