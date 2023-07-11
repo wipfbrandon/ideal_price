@@ -158,7 +158,7 @@ rent_final = df_ideal_rent[['Price','IdealRent','Diff', 'TH_Total', 'NetInc', 'N
 rent_final = rent_final.rename(index={0:'IDEAL', 1:'MAYBE'})
 
 idealPrice = df_ideal_price.head(1)["IdealOffer"].iloc[0]
-idealRent = {df_first_rent.head(1)["IdealRent"].iloc[0]
+idealRent = df_first_rent.head(1)["IdealRent"].iloc[0]
              
 #%% BUILD PAGE
 
