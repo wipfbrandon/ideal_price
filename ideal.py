@@ -170,7 +170,7 @@ idealRentText = f'The Ideal Rent is {idealRent} per Unit, if the Purchase Price 
 st.title('Ideal Price and Rents')
 
 if price_final.head(1)["TH_Total"].iloc[0] == 4:
-    st.write(idealPriceText)
+    st.write(f'The Ideal Price is {idealPrice}, if Rents are actually {maxRentFormat} per Unit.')
 else:
     'This Price is too HIGH!'
 
