@@ -164,7 +164,7 @@ rent_final = rent_final.rename(index={0:'IDEAL', 1:'MAYBE'})
 st.title('Ideal Price and Rents')
 
 if price_final.head(1)["TH_Total"].iloc[0] == 4:
-    f'The Ideal Price is {df_ideal_price.head(1)["IdealOffer"].iloc[0]}... if Rents are actually {maxRents} per Unit.'
+    'The Ideal Price is '  ${:,.0f}'.format(df_ideal_price.head(1)["IdealOffer"].iloc[0]) '... if Rents are actually {maxRents} per Unit.'
 else:
     'This Price is too HIGH!'
 
