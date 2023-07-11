@@ -140,10 +140,8 @@ df_price = ideal_price(listPrice=listPrice, units=units, estRentUnit=maxRents, s
 df_ideal_price = df_price[(df_price.TH_Total == df_price.TH_Total.max())]
 df_second_price = df_price[(df_price.TH_Total == (df_price.TH_Total.max() - 1))].head(1)
 
-price_final = df_ideal_price[['IdealOffer','Price','Diff','DiffPct','NetInc','TH_Total',
-                              'NPM','OnePctTest','CoCROI', 'Rent','DownPay','CashToClose',
-                              'OfferSqFt','RentSqtFt','GAR','FixedExp','VarExp','TotalExp',
-                              ]].head(1).reset_index(drop=True)
+price_final = df_ideal_price[['IdealOffer','Price','Diff','DiffPct','TH_Total','NetInc','NPM','OnePctTest','CoCROI', 'Rent','DownPay','CashToClose',
+                              'OfferSqFt','RentSqtFt','GAR','FixedExp','VarExp','TotalExp']].head(1).reset_index(drop=True)
 
 price_final = price_final.rename(index={0:'IDEAL'})
 
