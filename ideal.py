@@ -132,7 +132,7 @@ st.sidebar.write('---')
 st.sidebar.write('THRESHOLDS')
 incomeTH = st.sidebar.number_input('Net Income Threshold ($)',min_value=1, value=2000, step=500, help='Gross Annual Rents - Total Expenses')
 npmTH = st.sidebar.number_input('Net Profit Margin Threshold (%)', min_value=1.00, value=5.00, step=0.1, help='Net Income / Gross Annual Rents')
-onePctTH = st.sidebar.number_input('One Pct Test Threshold (%)',min_value=1.00, value=1.00, step=0.01, help='Annual Rents / Price')
+onePctTH = st.sidebar.number_input('One Pct Test Threshold (%)',min_value=0.00, value=1.00, step=0.01, help='Annual Rents / Price')
 cocroiTH = st.sidebar.number_input('CoCROI Threshold (%)',min_value=1.00, value=5.00, step=0.1, help='Net Income / Cash In')
 
 #%% CALCULATE
