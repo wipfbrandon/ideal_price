@@ -162,15 +162,15 @@ idealRent = '${:,.0f}'.format(df_first_rent.head(1)["IdealRent"].iloc[0])
 maxRentFormat = '${:,.0f}'.format(int(maxRents))
 listPriceFormat = '${:,.0f}'.format(listPrice)
 
-idealPriceText = f'The Ideal Price is {idealPrice}, if Rents are actually {maxRentFormat} per Unit.'
-idealRentText = f'The Ideal Rent is {idealRent} per Unit, if the Purchase Price is actually {listPriceFormat}'
+idealPriceText = f'The Ideal Price is {df_ideal_price.head(1)["IdealOffer"].iloc[0]}, if Rents are actually {maxRents} per Unit.'
+idealRentText = f'The Ideal Rent is {df_first_rent.head(1)["IdealRent"].iloc[0]} per Unit, if the Purchase Price is actually {listPrice}'
 
 #%% BUILD PAGE
 
 st.title('Ideal Price and Rents')
 
 if price_final.head(1)["TH_Total"].iloc[0] == 4:
-    st.write('The Ideal Price is ', f'{idealPrice}', ' - if Rents are actually ', f'{maxRentFormat}', ' per Unit.')
+    st.write(idealPriceText)
 else:
     'This Price is too HIGH!'
 
