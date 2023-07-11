@@ -27,7 +27,7 @@ def ideal_price(listPrice=1, units=1, estRentUnit=1, squareFeet=1, tax=1, ins=1,
     df['RentSqtFt'] = round(df.Rent / df.SquareFtUnit, 2)
     df['RentTotal'] = df.Rent * units
     df['GAR'] = df.RentTotal * 12
-    df['LnPmt'] = round((rate/12) * (1/(1-(1+rate/12)**(-term*12))) * df.Loan, 0)
+    df['LnPmt'] = round(((rate/100)/12) * (1/(1-(1+(rate/100)/12)**(-term*12))) * df.Loan, 0)
 
     if tax == 1:
         df['Tax'] = df.IdealOffer * 0.02 #Assuming 2% of List Offer
@@ -81,7 +81,7 @@ def ideal_rent(listPrice=1, units=1, estRentUnit=1, squareFeet=1, tax=1, ins=1, 
     df['RentSqtFt'] = round(df.IdealRent / df.SquareFtUnit, 2)
     df['RentTotal'] = df.IdealRent * units
     df['GAR'] = df.RentTotal * 12
-    df['LnPmt'] = round((rate/12) * (1/(1-(1+rate/12)**(-term*12))) * df.Loan, 0)
+    df['LnPmt'] = round(((rate/100)/12) * (1/(1-(1+(rate/100)/12)**(-term*12))) * df.Loan, 0)
 
     if tax == 1:
         df['Tax'] = df.Price * 0.02 #Assuming 2% of List Offer
@@ -96,7 +96,7 @@ def ideal_rent(listPrice=1, units=1, estRentUnit=1, squareFeet=1, tax=1, ins=1, 
     df['FixedExp'] = (df.LnPmt * 12 + df.Tax + df.Ins)
     df['VarExp'] = (df.GAR * 0.15) #Assuming 15% of Gross Annual Rents
     df['TotalExp'] = (df.FixedExp + df.VarExp)
-    df['NetInc'] = (df.GAR - df.TotalExp)
+    df['NetInc'] = (df.GAR - df.TotalExp).astype(int)
     df['NPM'] = round((df.NetInc / df.GAR) * 100, 2)
     df['OnePctTest'] = round((df.RentTotal / df.Price) * 100, 2)
     df['CoCROI'] = round((df.NetInc / df.CashToClose) * 100, 2)
@@ -117,63 +117,83 @@ def ideal_rent(listPrice=1, units=1, estRentUnit=1, squareFeet=1, tax=1, ins=1, 
 
 
 #%% STREAMLIT OUTPUT
+st.sidebar.write('PROPERTY DETAILS')
 listPrice = st.sidebar.number_input('Purchase Price',min_value=1, value=200000, step=10000, help='Enter what you would pay, not the List Price')
 units = st.sidebar.number_input('Number of Units',min_value=1, value=2, step=1)
 maxRents = st.sidebar.number_input('Maximum Rent / Unit',min_value=1, value=750, step=50, help='If Units differ, enter Average')
 squareFeet = st.sidebar.number_input('Square Feet (Total)',min_value=1, value=1000, step=100, help='Total Square Footage of Property')
 taxes = st.sidebar.number_input('Taxes',min_value=1, value=500, step=100)
 insurance = st.sidebar.number_input('Insurance',min_value=1, value=500, step=500, help='Best Guess')
+st.sidebar.write('---')
+st.sidebar.write('ASSUMPTIONS')
+rate = st.sidebar.number_input('Interest Rate %', min_value=0.1, value=7.0, step=0.1, help='Interest Rate as whole number')
+term = st.sidebar.number_input('Loan Term',min_value=1, max_value=30, value=20, step=5, help='Loan Term in Years')
+st.sidebar.write('---')
+st.sidebar.write('THRESHOLDS')
 incomeTH = st.sidebar.number_input('Net Income Threshold ($)',min_value=1, value=2000, step=500, help='Gross Annual Rents - Total Expenses')
 npmTH = st.sidebar.number_input('Net Profit Margin Threshold (%)', min_value=1.00, value=5.00, step=0.1, help='Net Income / Gross Annual Rents')
 onePctTH = st.sidebar.number_input('One Pct Test Threshold (%)',min_value=1.00, value=1.00, step=0.01, help='Annual Rents / Price')
 cocroiTH = st.sidebar.number_input('CoCROI Threshold (%)',min_value=1.00, value=5.00, step=0.1, help='Net Income / Cash In')
 
 #%% CALCULATE
-df_price = ideal_price(listPrice=listPrice, units=units, estRentUnit=maxRents, squareFeet=squareFeet, tax=taxes, ins=insurance, ni_th=incomeTH, npm_th=npmTH, pct_th=onePctTH, coc_th=cocroiTH)
+df_price = ideal_price(listPrice=listPrice, units=units, estRentUnit=maxRents, squareFeet=squareFeet, tax=taxes, ins=insurance, rate=rate, term=term, ni_th=incomeTH, npm_th=npmTH, pct_th=onePctTH, coc_th=cocroiTH)
 df_ideal_price = df_price[(df_price.TH_Total == df_price.TH_Total.max())]
 df_second_price = df_price[(df_price.TH_Total == (df_price.TH_Total.max() - 1))].head(1)
 
-price_final = df_ideal_price[['Price','IdealOffer','Diff','DiffPct','Rent','DownPay','CashToClose',
-          'OfferSqFt','RentSqtFt','GAR','FixedExp','VarExp','TotalExp','NetInc',
-          'NPM','OnePctTest','CoCROI','TH_Total'
-          ]].head(1).reset_index(drop=True)
+price_final = df_ideal_price[['IdealOffer','Price','Diff','DiffPct','NetInc','TH_Total',
+                              'NPM','OnePctTest','CoCROI', 'Rent','DownPay','CashToClose',
+                              'OfferSqFt','RentSqtFt','GAR','FixedExp','VarExp','TotalExp',
+                              ]].head(1).reset_index(drop=True)
 
 price_final = price_final.rename(index={0:'IDEAL'})
 
-df_rent = ideal_rent(listPrice=listPrice, units=units, estRentUnit=maxRents, squareFeet=squareFeet, tax=taxes, ins=insurance, ni_th=incomeTH, npm_th=npmTH, pct_th=onePctTH, coc_th=cocroiTH)
+df_rent = ideal_rent(listPrice=listPrice, units=units, estRentUnit=maxRents, squareFeet=squareFeet, tax=taxes, ins=insurance, rate=rate, term=term, ni_th=incomeTH, npm_th=npmTH, pct_th=onePctTH, coc_th=cocroiTH)
 
 df_first_rent = df_rent[(df_rent.TH_Total == df_rent.TH_Total.max())].head(1)
 df_second_rent = df_rent[(df_rent.TH_Total == (df_rent.TH_Total.max() - 1))].head(1)
 
 df_ideal_rent = pd.concat([df_first_rent, df_second_rent], axis=0, ignore_index=True)
 
-rent_final = df_ideal_rent[['Price','IdealRent','Diff','DownPay','CashToClose',
-         'OfferSqFt','RentSqtFt','GAR','FixedExp','VarExp','TotalExp','NetInc',
-         'NPM','OnePctTest','CoCROI','TH_Total']].reset_index(drop=True)
+rent_final = df_ideal_rent[['Price','IdealRent','Diff', 'TH_Total', 'NetInc', 'NPM','OnePctTest','CoCROI','DownPay','CashToClose',
+                            'OfferSqFt','RentSqtFt','GAR','FixedExp','VarExp','TotalExp']].reset_index(drop=True)
 
 rent_final = rent_final.rename(index={0:'IDEAL', 1:'MAYBE'})
+
+
 
 #%% BUILD PAGE
 
 st.title('Ideal Price and Rents')
 
-f'The Ideal Price is {df_ideal_price.head(1)["IdealOffer"].iloc[0]}... if Rents are actually {maxRents} per Unit.'
-f'The Ideal Rent is ${df_first_rent.head(1)["IdealRent"].iloc[0]} per Unit... if the Purchase Price is actually {listPrice}.'
+if price_final.head(1)["TH_Total"].iloc[0] > 2:
+    f'The Ideal Price is {df_ideal_price.head(1)["IdealOffer"].iloc[0]}... if Rents are actually {maxRents} per Unit.'
+else:
+    'This Price is too HIGH!'
 
+if rent_final.head(1)["TH_Total"].iloc[0] > 2:
+    f'The Ideal Rent is ${df_first_rent.head(1)["IdealRent"].iloc[0]} per Unit... if the Purchase Price is actually {listPrice}.'
+else:
+    'These Rents are too LOW!'
 
 """
 ---
-Ideal Price:
+Ideal Price Data Table:
 """
-st.dataframe(price_final)
-st.caption('_(F) denotes threshold was NOT met._')
+if price_final.head(1)["TH_Total"].iloc[0] < 3:
+    st.write('THIS SCENARIO DOES NOT WORK!')
+else:
+    st.dataframe(price_final)
+    st.caption('_(F) denotes threshold was NOT met._')
 
 '''
 ---
-Ideal Rents
+Ideal Rents Data Table:
 '''
-st.dataframe(rent_final)
-st.caption('_(F) denotes threshold was NOT met._')
+if rent_final.head(1)["TH_Total"].iloc[0] < 3:
+    st.write('THIS SCENARIO DOES NOT WORK!')
+else:
+    st.dataframe(rent_final)
+    st.caption('_(F) denotes threshold was NOT met._')
 
 """
 ---
