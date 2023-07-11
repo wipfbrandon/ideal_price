@@ -159,7 +159,7 @@ rent_final = rent_final.rename(index={0:'IDEAL', 1:'MAYBE'})
 
 idealPrice = '${:,.0f}'.format(int(df_ideal_price.head(1)["IdealOffer"].iloc[0]))
 idealRent = '${:,.0f}'.format(df_first_rent.head(1)["IdealRent"].iloc[0])
-maxRentFormat = '${:,.0f}'.format(maxRents)
+maxRentFormat = '${:,.0f}'.format(int(maxRents))
 listPriceFormat = '${:,.0f}'.format(listPrice)
 
 idealPriceText = f'The Ideal Price is {idealPrice}, if Rents are actually {maxRentFormat} per Unit.'
