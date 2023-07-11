@@ -157,15 +157,20 @@ rent_final = df_ideal_rent[['Price','IdealRent','Diff', 'TH_Total', 'NetInc', 'N
 
 rent_final = rent_final.rename(index={0:'IDEAL', 1:'MAYBE'})
 
-idealPrice = df_ideal_price.head(1)["IdealOffer"].iloc[0]
-idealRent = df_first_rent.head(1)["IdealRent"].iloc[0]
-             
+idealPrice = '${:,.0f}'.format(df_ideal_price.head(1)["IdealOffer"].iloc[0])
+idealRent = '${:,.0f}'.format(df_first_rent.head(1)["IdealRent"].iloc[0])
+maxRentFormat = '${:,.0f}'.format(maxRents)
+listPriceFormat = '${:,.0f}'.format(listPrice)
+
+idealPriceText = f'The Ideal Price is {idealPrice}, if Rents are actually {maxRentFormat} per Unit.'
+idealRentText = f'The Ideal Rent is {idealRent} per Unit, if the Purchase Price is actually {listPriceFormat}'
+
 #%% BUILD PAGE
 
 st.title('Ideal Price and Rents')
 
 if price_final.head(1)["TH_Total"].iloc[0] == 4:
-    st.write('The Ideal Price is ',  '${:,.0f}'.format(idealPrice), ', if Rents are actually ', '${:,.0f}'.format(maxRents), ' per Unit.')
+    st.write(idealPriceText)
 else:
     'This Price is too HIGH!'
 
