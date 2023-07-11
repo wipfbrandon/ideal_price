@@ -163,12 +163,12 @@ rent_final = rent_final.rename(index={0:'IDEAL', 1:'MAYBE'})
 
 st.title('Ideal Price and Rents')
 
-if price_final.head(1)["TH_Total"].iloc[0] > 2:
+if price_final.head(1)["TH_Total"].iloc[0] == 4:
     f'The Ideal Price is {df_ideal_price.head(1)["IdealOffer"].iloc[0]}... if Rents are actually {maxRents} per Unit.'
 else:
     'This Price is too HIGH!'
 
-if rent_final.head(1)["TH_Total"].iloc[0] > 2:
+if rent_final.head(1)["TH_Total"].iloc[0] == 4:
     f'The Ideal Rent is ${df_first_rent.head(1)["IdealRent"].iloc[0]} per Unit... if the Purchase Price is actually {listPrice}.'
 else:
     'These Rents are too LOW!'
@@ -177,7 +177,7 @@ else:
 ---
 Ideal Price Data Table:
 """
-if price_final.head(1)["TH_Total"].iloc[0] < 3:
+if price_final.head(1)["TH_Total"].iloc[0] < 4:
     st.write('THIS SCENARIO DOES NOT WORK!')
 else:
     st.dataframe(price_final)
@@ -187,7 +187,7 @@ else:
 ---
 Ideal Rents Data Table:
 '''
-if rent_final.head(1)["TH_Total"].iloc[0] < 3:
+if rent_final.head(1)["TH_Total"].iloc[0] < 4:
     st.write('THIS SCENARIO DOES NOT WORK!')
 else:
     st.dataframe(rent_final)
