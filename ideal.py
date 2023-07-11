@@ -165,12 +165,12 @@ idealRent = df_first_rent.head(1)["IdealRent"].iloc[0]
 st.title('Ideal Price and Rents')
 
 if price_final.head(1)["TH_Total"].iloc[0] == 4:
-    st.write('The Ideal Price is ',  '${:,.0f}'.format(idealPrice), '... if Rents are actually ', '${:,.0f}'.format(maxRents), ' per Unit.')
+    st.write('The Ideal Price is ',  '${:,.0f}'.format(idealPrice), ', if Rents are actually ', '${:,.0f}'.format(maxRents), ' per Unit.')
 else:
     'This Price is too HIGH!'
 
 if rent_final.head(1)["TH_Total"].iloc[0] == 4:
-    st.write('The Ideal Rent is ', '${:,.0f}'.format(idealRent), ' per Unit... if the Purchase Price is actually', '${:,.0f}'.format(listPrice), '.')
+    st.write('The Ideal Rent is ', '${:,.0f}'.format(idealRent), ' per Unit, if the Purchase Price is actually', '${:,.0f}'.format(listPrice), '.')
 else:
     'These Rents are too LOW!'
 
