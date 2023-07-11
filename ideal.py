@@ -118,7 +118,7 @@ def ideal_rent(listPrice=1, units=1, estRentUnit=1, squareFeet=1, tax=1, ins=1, 
 
 #%% STREAMLIT OUTPUT
 st.sidebar.write('PROPERTY DETAILS')
-listPrice = st.sidebar.number_input('Purchase Price',min_value=1, value=200000, step=10000, help='Enter what you would pay, not the List Price')
+listPrice = st.sidebar.number_input('Purchase Price',min_value=1, value=200000, step=10000, format="%0.1f", help='Enter what you would pay, not the List Price')
 units = st.sidebar.number_input('Number of Units',min_value=1, value=2, step=1)
 maxRents = st.sidebar.number_input('Maximum Rent / Unit',min_value=1, value=750, step=50, help='If Units differ, enter Average')
 squareFeet = st.sidebar.number_input('Square Feet (Total)',min_value=1, value=1000, step=100, help='Total Square Footage of Property')
