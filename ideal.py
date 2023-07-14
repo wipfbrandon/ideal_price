@@ -8,7 +8,7 @@ import streamlit as st
 import pandas as pd
 
 @st.cache_data
-def ideal_price(listPrice=1, units=1, estRentUnit=1, squareFeet=1, tax=1, ins=1, rate=0.07, term=20, ni_th=2000, npm_th=5, pct_th=1, coc_th=5):
+def ideal_price(listPrice=1, units=1, estRentUnit=1, squareFeet=1, tax=1, ins=1, rate=0.07, term=20, varExpPct=15.0, ni_th=2000, npm_th=5, pct_th=1, coc_th=5):
     df = pd.DataFrame()
     df['Price'] = 0
     df['IdealOffer'] = [x for x in range(listPrice, listPrice - 50_000, -2_000)]
@@ -40,7 +40,7 @@ def ideal_price(listPrice=1, units=1, estRentUnit=1, squareFeet=1, tax=1, ins=1,
         df['Ins'] = ins
 
     df['FixedExp'] = (df.LnPmt * 12 + df.Tax + df.Ins).astype(int)
-    df['VarExp'] = (df.GAR * 0.15).astype(int) #Assuming 15% of Gross Annual Rents
+    df['VarExp'] = (df.GAR * (varExpPct/100)).astype(int) #Assuming 15% of Gross Annual Rents
     df['TotalExp'] = (df.FixedExp + df.VarExp).astype(int)
     df['NetInc'] = (df.GAR - df.TotalExp).astype(int)
     df['NPM'] = round((df.NetInc / df.GAR) * 100, 2)
@@ -62,7 +62,7 @@ def ideal_price(listPrice=1, units=1, estRentUnit=1, squareFeet=1, tax=1, ins=1,
     return df
 
 @st.cache_data
-def ideal_rent(listPrice=1, units=1, estRentUnit=1, squareFeet=1, tax=1, ins=1, rate=0.07,term=20, ni_th=2000, npm_th=5, pct_th=1, coc_th=5):
+def ideal_rent(listPrice=1, units=1, estRentUnit=1, squareFeet=1, tax=1, ins=1, rate=0.07,term=20, varExpPct=15.0, ni_th=2000, npm_th=5, pct_th=1, coc_th=5):
     df = pd.DataFrame()
     minRent = int(round(estRentUnit * 0.75, 0))
     df['Price'] = 1
@@ -94,7 +94,7 @@ def ideal_rent(listPrice=1, units=1, estRentUnit=1, squareFeet=1, tax=1, ins=1, 
         df['Ins'] = ins
 
     df['FixedExp'] = (df.LnPmt * 12 + df.Tax + df.Ins)
-    df['VarExp'] = (df.GAR * 0.15) #Assuming 15% of Gross Annual Rents
+    df['VarExp'] = (df.GAR * (varExpPct/100)) #Assuming 15% of Gross Annual Rents
     df['TotalExp'] = (df.FixedExp + df.VarExp)
     df['NetInc'] = (df.GAR - df.TotalExp).astype(int)
     df['NPM'] = round((df.NetInc / df.GAR) * 100, 2)
@@ -128,6 +128,7 @@ st.sidebar.write('---')
 st.sidebar.write('ASSUMPTIONS')
 rate = st.sidebar.number_input('Interest Rate %', min_value=0.1, value=7.0, step=0.1, help='Interest Rate as whole number')
 term = st.sidebar.number_input('Loan Term',min_value=1, max_value=30, value=20, step=5, help='Loan Term in Years')
+var_exp_rt = st.sidebar.number_input('Variable Expense Rate %', min_value=0.1, value=15.0, step=0.1, help='Percentage of GAR')
 st.sidebar.write('---')
 st.sidebar.write('THRESHOLDS')
 incomeTH = st.sidebar.number_input('Net Income Threshold ($)',min_value=1, value=2000, step=500, help='Gross Annual Rents - Total Expenses')
@@ -136,7 +137,7 @@ onePctTH = st.sidebar.number_input('One Pct Test Threshold (%)',min_value=0.00, 
 cocroiTH = st.sidebar.number_input('CoCROI Threshold (%)',min_value=1.00, value=5.00, step=0.1, help='Net Income / Cash In')
 
 #%% CALCULATE
-df_price = ideal_price(listPrice=listPrice, units=units, estRentUnit=maxRents, squareFeet=squareFeet, tax=taxes, ins=insurance, rate=rate, term=term, ni_th=incomeTH, npm_th=npmTH, pct_th=onePctTH, coc_th=cocroiTH)
+df_price = ideal_price(listPrice=listPrice, units=units, estRentUnit=maxRents, squareFeet=squareFeet, tax=taxes, ins=insurance, rate=rate, term=term, varExpPct=var_exp_rt, ni_th=incomeTH, npm_th=npmTH, pct_th=onePctTH, coc_th=cocroiTH)
 df_ideal_price = df_price[(df_price.TH_Total == df_price.TH_Total.max())]
 df_second_price = df_price[(df_price.TH_Total == (df_price.TH_Total.max() - 1))].head(1)
 
@@ -145,7 +146,7 @@ price_final = df_ideal_price[['IdealOffer','Price','Diff','DiffPct','TH_Total','
 
 price_final = price_final.rename(index={0:'IDEAL'})
 
-df_rent = ideal_rent(listPrice=listPrice, units=units, estRentUnit=maxRents, squareFeet=squareFeet, tax=taxes, ins=insurance, rate=rate, term=term, ni_th=incomeTH, npm_th=npmTH, pct_th=onePctTH, coc_th=cocroiTH)
+df_rent = ideal_rent(listPrice=listPrice, units=units, estRentUnit=maxRents, squareFeet=squareFeet, tax=taxes, ins=insurance, rate=rate, term=term, varExpPct=var_exp_rt, ni_th=incomeTH, npm_th=npmTH, pct_th=onePctTH, coc_th=cocroiTH)
 
 df_first_rent = df_rent[(df_rent.TH_Total == df_rent.TH_Total.max())].head(1)
 df_second_rent = df_rent[(df_rent.TH_Total == (df_rent.TH_Total.max() - 1))].head(1)
