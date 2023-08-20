@@ -167,44 +167,46 @@ idealPriceText = f'The Ideal Price is {df_ideal_price.head(1)["IdealOffer"].iloc
 idealRentText = f'The Ideal Rent is {df_first_rent.head(1)["IdealRent"].iloc[0]} per Unit, if the Purchase Price is actually {listPrice}'
 
 #%% BUILD PAGE
+tab1, tab2 = st.tabs("ANALYSIS", "THRESHOLDS")
+with tab1:
+    st.title('Ideal Price and Rents')
+    
+    if price_final.head(1)["TH_Total"].iloc[0] == 4:
+        st.write(idealPriceText)
+    else:
+        'This Price is too HIGH!'
+    
+    if rent_final.head(1)["TH_Total"].iloc[0] == 4:
+        st.write(idealRentText)
+    else:
+        'These Rents are too LOW!'
+    
+    """
+    ---
+    Ideal Price Data Table:
+    """
+    if price_final.head(1)["TH_Total"].iloc[0] < 4:
+        st.write('THIS SCENARIO DOES NOT WORK!')
+    else:
+        st.dataframe(price_final)
+        st.caption('_(F) denotes threshold was NOT met._')
+    
+    '''
+    ---
+    Ideal Rents Data Table:
+    '''
+    if rent_final.head(1)["TH_Total"].iloc[0] < 4:
+        st.write('THIS SCENARIO DOES NOT WORK!')
+    else:
+        st.dataframe(rent_final)
+        st.caption('_(F) denotes threshold was NOT met._')
 
-st.title('Ideal Price and Rents')
-
-if price_final.head(1)["TH_Total"].iloc[0] == 4:
-    st.write(idealPriceText)
-else:
-    'This Price is too HIGH!'
-
-if rent_final.head(1)["TH_Total"].iloc[0] == 4:
-    st.write(idealRentText)
-else:
-    'These Rents are too LOW!'
-
-"""
----
-Ideal Price Data Table:
-"""
-if price_final.head(1)["TH_Total"].iloc[0] < 4:
-    st.write('THIS SCENARIO DOES NOT WORK!')
-else:
-    st.dataframe(price_final)
-    st.caption('_(F) denotes threshold was NOT met._')
-
-'''
----
-Ideal Rents Data Table:
-'''
-if rent_final.head(1)["TH_Total"].iloc[0] < 4:
-    st.write('THIS SCENARIO DOES NOT WORK!')
-else:
-    st.dataframe(rent_final)
-    st.caption('_(F) denotes threshold was NOT met._')
-
-"""
----
-THRESHOLDS (FLOORS) SET FOR THIS SCENARIO:
-"""
-st.caption('Net Income: ' '${:,.0f}'.format(incomeTH))
-st.caption(f'Net Profit Margin: {round(npmTH, 2)}%')
-st.caption(f'One Percent Test: {round(onePctTH, 2)}%')
-st.caption(f'CoC ROI: {round(cocroiTH, 2)}%')
+with tab2:
+    """
+    ---
+    THRESHOLDS (FLOORS) SET FOR THIS SCENARIO:
+    """
+    st.caption('Net Income: ' '${:,.0f}'.format(incomeTH))
+    st.caption(f'Net Profit Margin: {round(npmTH, 2)}%')
+    st.caption(f'One Percent Test: {round(onePctTH, 2)}%')
+    st.caption(f'CoC ROI: {round(cocroiTH, 2)}%')
