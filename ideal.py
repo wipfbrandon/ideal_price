@@ -7,6 +7,16 @@ Created on Sat Mar 18 12:27:42 2023
 import streamlit as st
 import pandas as pd
 
+st.set_page_config(
+    page_title="Ideal Rents",
+    page_icon="🏠",
+    layout="wide",
+    initial_sidebar_state="expanded",
+    menu_items={
+        'Author': 'Brandon Wipf',
+    }
+)
+
 @st.cache_data
 def ideal_price(listPrice=1, units=1, estRentUnit=1, squareFeet=1, tax=1, ins=1, rate=0.07, term=20, varExpPct=15.0, ni_th=2000, npm_th=5, pct_th=1, coc_th=5):
     df = pd.DataFrame()
