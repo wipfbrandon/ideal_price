@@ -13,7 +13,7 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded",
     menu_items={
-        'Author': 'Brandon Wipf',
+        'Get help': 'Contact Brandon Wipf',
     }
 )
 
