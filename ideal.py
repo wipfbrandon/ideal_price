@@ -163,8 +163,8 @@ idealRent = '${:,.0f}'.format(df_first_rent.head(1)["IdealRent"].iloc[0])
 maxRentFormat = '${:,.0f}'.format(int(maxRents))
 listPriceFormat = '${:,.0f}'.format(listPrice)
 
-idealPriceText = f'The Ideal Price is {idealPrice}, if Rents are actually {maxRentFormat} per Unit.'
-idealRentText = f'The Ideal Rent is {idealRent} per Unit, if the Purchase Price is actually {listPriceFormat}'
+idealPriceText = f'The Ideal Price is {df_ideal_price.head(1)["IdealOffer"].iloc[0]}, if Rents are actually {maxRents} per Unit.'
+idealRentText = f'The Ideal Rent is {df_first_rent.head(1)["IdealRent"].iloc[0]} per Unit, if the Purchase Price is actually {listPrice}'
 
 #%% BUILD PAGE
 tab1, tab2 = st.tabs(["ANALYSIS", "THRESHOLDS"])
