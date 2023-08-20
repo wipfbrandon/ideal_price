@@ -167,7 +167,7 @@ idealPriceText = f'The Ideal Price is {df_ideal_price.head(1)["IdealOffer"].iloc
 idealRentText = f'The Ideal Rent is {df_first_rent.head(1)["IdealRent"].iloc[0]} per Unit, if the Purchase Price is actually {listPrice}'
 
 #%% BUILD PAGE
-tab1, tab2 = st.tabs("ANALYSIS", "THRESHOLDS")
+tab1, tab2 = st.tabs(["ANALYSIS", "THRESHOLDS"])
 with tab1:
     st.title('Ideal Price and Rents')
     
